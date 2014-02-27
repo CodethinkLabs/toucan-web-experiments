@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0"/>
+    <link rel="stylesheet" media="screen" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" media="screen" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css"/>
+    <link href="http://fonts.googleapis.com/css?family=Roboto:400,300,500,700" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=Titillium+Web:400,600italic,700,600,300" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/assets/js/html5shiv.js"></script>
+      <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/assets/js/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="../consonant.js/consonant.js"></script>
+    <script type="text/javascript" src="effects.js"></script>
+    <script type="text/javascript" src="objects.js"></script>
+    <link rel="stylesheet" media="screen" href="style.css"/>
+    <title>Toucan</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">CT142 - Consonant</a>
+      </div>
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="#">Overview</a></li>
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Views</a>
+            <ul class="dropdown-menu">
+              <li role="presentation" class="dropdown-header">Actions</li>
+              <li><a href="#create-card-modal" data-toggle="modal">Create a new card</a></li>
+              <li><a href="#">Create a new board</a></li>
+              <li role="presentation" class="divider"></li>
+              <li id="nav-list-views" role="presentation" class="dropdown-header">Views</li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reasons</a>
+            <ul class="dropdown-menu">
+              <li role="presentation" class="dropdown-header">Actions</li>
+              <li><a href="#">Create a new reason</a></li>
+              <li role="presentation" class="divider"></li>
+              <li id="nav-list-reasons" role="presentation" class="dropdown-header">Reasons</li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Milestones</a>
+            <ul class="dropdown-menu">
+              <li role="presentation" class="dropdown-header">Actions</li>
+              <li><a href="#">Create a new milestone</a></li>
+              <li role="presentation" class="divider"></li>
+              <li id="nav-list-milestones" role="presentation" class="dropdown-header">Milestones</li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lanes</a>
+            <ul class="dropdown-menu">
+              <li role="presentation" class="dropdown-header">Actions</li>
+              <li><a href="#">Create a new lane</a></li>
+              <li role="presentation" class="divider"></li>
+              <li id="nav-list-lanes" role="presentation" class="dropdown-header">Lanes</li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tags</a>
+            <ul class="dropdown-menu">
+              <li role="presentation" class="dropdown-header">Actions</li>
+              <li><a href="#">Create a new tag</a></li>
+              <li role="presentation" class="divider"></li>
+              <li role="presentation" class="dropdown-header">Tags</li>
+              <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">No tags defined</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-time"></span> History</a>
+            <ul class="dropdown-menu">
+              <li role="presentation" class="dropdown-header">HEAD</li>
+              <li><a href="#">View the commit log</a></li>
+              <li><a href="#">Create a new branch</a></li>
+              <li><a href="#">Create a new tag</a></li>
+              <li role="presentation" class="divider"></li>
+              <li id="nav-list-branches" role="presentation" class="dropdown-header">Branches</li>
+              <li role="presentation" class="divider"></li>
+              <li id="nav-list-tags" role="presentation" class="dropdown-header">Tags</li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="https://en.gravatar.com/userimage/3246845/5b8abbb44ee91acfc3fd733d5f069cb6.jpg?size=24" alt="Avatar" class="img-rounded"/> Jannis Pohlmann</a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Settings</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+    <div id="body">
+      <div class="kanban-board" id="lanes">
+      </div>
+    </div>
+  </body>
+</html>
+  </body>
+</html>
