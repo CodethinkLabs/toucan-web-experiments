@@ -172,8 +172,9 @@ h1 {
 
 .kanban-card-avatars {
   text-align: right;
-  margin: 0em 0 -18px 0em;
+  margin: 0em 0 -16px 0em;
   padding: 0em;
+  height: 24px;
 }
 
 .kanban-card-avatars img {

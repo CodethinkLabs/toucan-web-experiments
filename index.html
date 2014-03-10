@@ -15,8 +15,27 @@
     <![endif]-->
     <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../consonant.js/consonant.js"></script>
+    <!--
     <script type="text/javascript" src="effects.js"></script>
     <script type="text/javascript" src="objects.js"></script>
+    -->
+    <script type="text/javascript" src="toucan.ui.js"></script>
+    <script type="text/javascript">
+      function refreshToucanUI(connection) {
+        connection.refresh('master', function (commit) {
+          setTimeout(function () {
+            refreshToucanUI(connection);
+          }, 1000);
+        });
+      }
+
+      $(document).ready(function () {
+        var connection = new toucan.Toucan('http://localhost:8989');
+        setTimeout(function () {
+          refreshToucanUI(connection);
+        }, 1000);
+      });
+    </script>
     <link rel="stylesheet" media="screen" href="style.css"/>
     <title>Toucan</title>
   </head>
