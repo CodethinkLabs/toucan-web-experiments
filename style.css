@@ -166,8 +166,8 @@ h1 {
   margin: 15px;
 }
 
-.kanban-card .badge:after {
-  content: ' ';
+.kanban-card .panel-heading {
+  margin-right: 0.25em;
 }
 
 .kanban-card-avatars {
@@ -179,6 +179,8 @@ h1 {
 .kanban-card-avatars img {
   display: inline-block;
   border: thin solid #ddd;
+  width: 24px;
+  height: 24px;
 }
 
 .kanban-card .light {

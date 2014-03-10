@@ -130,13 +130,13 @@ function populateLane(commit, objects, lane) {
     });
 
     $.map(cards, function (card) {
-      createCard(commit, card, lane);
+      createCard(commit, objects, card, lane);
     });
   }
 }
 
 
-function createCard(commit, card, lane) {
+function createCard(commit, objects, card, lane) {
   var lane_div = $('#' + card.get('lane').uuid);
   var cards_list = $(lane_div).find('ul').first();
 
@@ -155,4 +155,22 @@ function createCard(commit, card, lane) {
   badge.text(lane.get('name'));
 
   box.append('<span class="description">' + card.get('title') + '</span>');
+
+  if (card.get('assignees') && card.get('assignees').length > 0) {
+    var avatar_box = box.append('<div></div>').children().last();
+    avatar_box.addClass('kanban-card-avatars');
+
+    var references = card.get('assignees');
+    var uuids = $.map(references, function (r) { return r.uuid; });
+    var assignees = $.grep(objects.user, function (user) {
+      return $.inArray(user.uuid, uuids) >= 0;
+    });
+    $.map(assignees, function (user) {
+      var image = avatar_box.append('<img></img>').children().last();
+      image.addClass('img-rounded');
+      image.attr('src', user.get('avatar'));
+      image.attr('alt', user.get('name'));
+      image.attr('title', user.get('name'));
+    });
+  }
 }
