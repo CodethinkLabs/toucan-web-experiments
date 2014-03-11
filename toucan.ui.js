@@ -3,6 +3,8 @@
     toucan.Toucan = function (url) {
         this.url = url;
         this.service = new consonant.Service(this.url);
+        this.ref = null;
+        this.objects = {};
     };
     var Toucan = toucan.Toucan;
 
@@ -45,14 +47,40 @@
             }
         };
 
+        var getObject = function (klass, property, value) {
+            if (klass in this.objects) {
+                var klass_objects = this.objects[klass];
+                var matches = $.grep(klass_objects, function (object) {
+                    return object.get(property) === value;
+                });
+                if (matches.length >= 0) {
+                    return matches[0];
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        };
+
+        var keepUpdated = function () {
+            var this_ = this;
+            this.refresh('master', function (commit) {
+                setTimeout(function () {
+                    this_.keepUpdated();
+                }, 500);
+            });
+        };
+
         var refresh = function (refname, callback) {
             var this_ = this;
             this.service.ref(refname, function (ref) {
+                this_.ref = ref;
                 ref.head.objects(function (objects) {
+                    this_.objects = objects;
+
                     // look up the default view
-                    var view = $.grep(objects.view, function (view) {
-                        return view.get('name') === 'Default';
-                    })[0];
+                    var view = this_.getObject('view', 'name', 'Default');
 
                     // update lanes
                     $.each(view.get('lanes'), function (index, reference) {
@@ -72,8 +100,21 @@
             });
         };
 
+        var resolveReferences = function (references, klass) {
+            var this_ = this;
+            var matches = $.map(references, function (reference) {
+                return $.grep(this_.objects[klass], function (object) {
+                    return object.uuid === reference.uuid;
+                });
+            });
+            return [].concat.apply([], matches);
+        };
+
         return {
+            getObject: getObject,
+            keepUpdated: keepUpdated,
             refresh: refresh,
+            resolveReferences: resolveReferences,
         };
     }();
 
@@ -96,18 +137,19 @@
             this.cards = $('<ul></ul>').appendTo(box);
             this.cards.addClass('list-group kanban-lane-cards');
 
-            this.lane = this.options.lane;
-            this._update();
+            this._update(this.options.lane);
         },
 
         _setOption: function (key, value) {
             if (key === 'lane') {
-                this.lane = value;
-                this._update();
+                this._update(value);
             }
         },
 
-        _update: function () {
+        _update: function (lane) {
+            // remember the new lane
+            this.lane = lane;
+
             // update element ID
             this.element.attr('id', this.lane.uuid);
 
@@ -200,4 +242,60 @@
             }
         },
     });
+
+    /**
+     * Methods related to the create card dialog.
+     */
+    $(document).ready(function () {
+        $('#create-card').on('show.bs.modal', function (e) {
+            // look up the default view and its lanes
+            var view = toucan.instance.getObject('view', 'name', 'Default');
+            var lanes = toucan.instance.resolveReferences(view.get('lanes'), 'lane');
+
+            // fill in potential lanes for the new card
+            $('#create-card-lane').empty();
+            $.each(lanes, function (index, lane) {
+                var option = $('<option></option>').appendTo('#create-card-lane');
+                option.attr('value', lane.uuid);
+                option.text(lane.get('name'));
+            });
+
+            // fill in potential reasons for the new card
+            $('#create-card-reason').empty();
+            $.each(toucan.instance.objects.reason, function (index, reason) {
+                var option = $('<option></option>').appendTo('#create-card-reason');
+                option.attr('value', reason.uuid);
+                option.text(reason.get('name'));
+            });
+
+            // fill in potential milestones for the new card
+            $('#create-card-milestone').empty();
+            $('#create-card-milestone').append('<option>- none -</option>');
+            $.each(toucan.instance.objects.milestone, function (index, milestone) {
+                var option = $('<option></option>').appendTo('#create-card-milestone');
+                option.attr('value', milestone.uuid);
+                option.text(milestone.get('name'));
+            });
+
+            // fill in potential assignees for the new card
+            $('#create-card-assignees').empty();
+            $.each(toucan.instance.objects.user, function (index, user) {
+                var option = $('<option></option>').appendTo('#create-card-assignees');
+                option.attr('value', user.uuid);
+                option.text(user.get('name'));
+            });
+        });
+
+        $('#create-card .btn-primary').click(function () {
+        });
+    });
+
+    /**
+     * Function to initialise toucan.ui and connect to a service.
+     */
+    toucan.connect = function (url) {
+        toucan.instance = new toucan.Toucan(url);
+        return toucan.instance;
+    };
+
 } (window.toucan = window.toucan || {}, jQuery));

@@ -21,19 +21,9 @@
     -->
     <script type="text/javascript" src="toucan.ui.js"></script>
     <script type="text/javascript">
-      function refreshToucanUI(connection) {
-        connection.refresh('master', function (commit) {
-          setTimeout(function () {
-            refreshToucanUI(connection);
-          }, 1000);
-        });
-      }
-
       $(document).ready(function () {
-        var connection = new toucan.Toucan('http://localhost:8989');
-        setTimeout(function () {
-          refreshToucanUI(connection);
-        }, 1000);
+        var connection = toucan.connect('http://localhost:8989');
+        connection.keepUpdated();
       });
     </script>
     <link rel="stylesheet" media="screen" href="style.css"/>
@@ -57,7 +47,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Views</a>
             <ul class="dropdown-menu">
               <li role="presentation" class="dropdown-header">Actions</li>
-              <li><a href="#create-card-modal" data-toggle="modal">Create a new card</a></li>
+              <li><a href="#create-card" data-toggle="modal">Create a new card</a></li>
               <li><a href="#">Create a new board</a></li>
               <li role="presentation" class="divider"></li>
               <li id="nav-list-views" role="presentation" class="dropdown-header">Views</li>
@@ -127,6 +117,64 @@
     <div id="body">
       <div class="kanban-board" id="lanes">
       </div>
+        <div class="modal fade" id="create-card" tabindex="-1" role="dialog" aria-labelledby="create-card-title" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="create-card-title">Create a card</h4>
+              </div>
+              <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label for="create-card-title" class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="create-card-title" placeholder="Title" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="create-card-description" class="col-sm-2 control-label">Description</label>
+                    <div class="col-sm-10">
+                      <textarea class="form-control" id="create-card-description" rows="10" placeholder="Description"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="create-card-lane" class="col-sm-2 control-label">Lane</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" id="create-card-lane">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="create-card-reason" class="col-sm-2 control-label">Reason</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" id="create-card-reason">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="create-card-milestone" class="col-sm-2 control-label">Milestone</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" id="create-card-milestone">
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="create-card-assignees" class="col-sm-2 control-label">Assignees</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" multiple="multiple" id="create-card-assignees">
+                      </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Create</button>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
   </body>
 </html>
