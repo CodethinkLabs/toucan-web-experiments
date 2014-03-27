@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0"/>
+    <link rel="stylesheet" media="screen" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" media="screen" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css"/>
+    <link href="http://fonts.googleapis.com/css?family=Roboto:400,300,500,700" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=Titillium+Web:400,600italic,700,600,300" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/assets/js/html5shiv.js"></script>
+      <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/assets/js/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../consonant.js/consonant.js"></script>
+    <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
+    <script type="text/javascript" src="http://backbonejs.org/backbone.js"></script>
+    <script type="text/javascript" src="http://marionettejs.com/downloads/backbone.marionette.js"></script>
+    <link rel="stylesheet" media="screen" href="style.css"/>
+    <title>Toucan</title>
+  </head>
+  <body>
+    <div id="body">
+    </div>
+    <script id="refs-layout" type="text/html">
+      <h1>Refs</h1>
+      <div id="content"></div>
+    </script>
+    <script id="ref-layout" type="text/html">
+      <h1>Views</h1>
+      <div id="content"></div>
+    </script>
+    <script type="text/template" id="ref-template">
+      <a href="refs/<%= url_aliases[0] %>"><%= name %></a> (<%= head.sha1 %>)
+    </script>
+    <script type="text/template" id="view-item-template">
+      <%= object.get('name') %>
+    </script>
+    <script type="text/javascript" src="backbone.js"></script>
+  </body>
+</html>
+

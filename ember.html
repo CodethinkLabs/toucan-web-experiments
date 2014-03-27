@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-1.0.0.js"></script>
+    <script type="text/javascript" src="http://builds.emberjs.com/tags/v1.3.0/ember.js"></script>
+    <script type="text/javascript" src="http://builds.emberjs.com/tags/v1.0.0-beta.5/ember-data.js"></script>
+    <script type="text/javascript" src="../consonant.js/consonant.js"></script>
+    <script type="text/javascript">
+      /**
+       * Application
+       */
+
+      ToucanApp = Ember.Application.extend({
+        service: new consonant.Service('http://localhost:8989'),
+      });
+
+      Toucan = ToucanApp.create();
+
+      /**
+       * Routes and their models
+       */
+
+      Toucan.Router.map(function() {
+        this.resource('refs', { path: '/' });
+        this.resource('ref', { path: '/refs/:ref' });
+        this.resource('commit', { path: '/commits/:sha1' });
+      });
+
+      Toucan.RefsRoute = Ember.Route.extend({
+        model: function (params) {
+          return this.store.find('ref');
+        }
+      });
+
+      Toucan.RefRoute = Ember.Route.extend({
+        model: function (params) {
+          return this.store.find('ref', params.ref);
+        }
+      });
+
+      /**
+       * Models
+       */
+
+      Toucan.Ref = DS.Model.extend({
+        name: DS.attr(),
+        type: DS.attr(),
+        aliases: DS.attr(),
+        commit: DS.belongsTo('commit'),
+      });
+
+      Toucan.Commit = DS.Model.extend({
+        sha1: DS.attr(),
+        author: DS.attr(),
+        subject: DS.attr(),
+        info: DS.belongsTo('info'),
+      });
+
+      Toucan.Info = DS.Model.extend({
+        name: DS.attr(),
+        description: DS.attr(),
+      });
+
+      /**
+       * Adapter
+       */
+
+      Toucan.ApplicationAdapter = DS.Adapter.extend({
+        _typeName: function (type) {
+          return type.url || type.typeKey;
+        },
+
+        findAll: function (store, type) {
+          console.log('findAll', type);
+
+          switch (this._typeName(type)) {
+            case 'ref':
+              return Toucan.get('service').refs().then(function (data) {
+                return $.map(data, function (ref, name) {
+                  return { name: name, ref: ref };
+                });
+              });
+          }
+        },
+
+        find: function (store, type, id) {
+          console.log('find', type, id);
+
+          switch (this._typeName(type)) {
+            case 'ref':
+              return Toucan.get('service').ref(id).then(function (ref) {
+                return { name: id, ref: ref };
+              });
+            case 'commit':
+              return Toucan.get('service').commit(id).then(function (commit) {
+                return commit;
+              });
+            case 'info':
+              return Toucan.get('service').commit()
+          }
+        },
+      });
+
+      /**
+       * Serializers
+       */
+
+      Toucan.RefSerializer = DS.JSONSerializer.extend({
+        extractArray: function (store, type, payload) {
+          return payload.map(function (record) {
+            return this.extractSingle(store, type, record);
+          }, this);
+        },
+
+        extractSingle: function (store, type, payload) {
+          var record = {
+            id: payload.name,
+            name: payload.name,
+            type: payload.ref.type,
+            aliases: payload.ref['url-aliases'],
+            commit: payload.ref.head.sha1,
+          };
+          return this._super(store, type, record);
+        },
+      });
+
+      Toucan.CommitSerializer = DS.JSONSerializer.extend({
+        extractSingle: function (store, type, payload) {
+          payload.id = payload.sha1;
+          payload.info = '_';
+          return this._super(store, type, payload);
+        },
+      });
+
+    </script>
+    <title>Ember</title>
+  </head>
+  <body>
+    <script type="text/x-handlebars" data-template-name="refs">
+      <h1>Refs</h1>
+      <ul>
+        {{#each}}
+          <li>{{#link-to 'ref' aliases.[0]}}{{name}}{{/link-to}}</li>
+        {{/each}}
+      </ul>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="ref">
+      <h1>{{#link-to 'ref' aliases.[0]}}Ref "{{name}}" ({{type}}){{/link-to}}</h1>
+      <h2>Commit</h2>
+      <p>SHA1: {{commit.sha1}}</p>
+      <p>Author: {{commit.author}}</p>
+      <p>Message: {{commit.subject}}</p>
+      <h2>Board info</h2>
+      <p>Name: {{commit.info.name}}</p>
+      <p>Description: {{commit.info.description}}</p>
+    </script>
+  </body>
+</html>
